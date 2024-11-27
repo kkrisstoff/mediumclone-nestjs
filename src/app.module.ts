@@ -17,6 +17,6 @@ export class AppModule {
     consumer.apply(AuthMiddleware).forRoutes({
       path: '*',
       method: RequestMethod.ALL,
-    })
+    });
   }
 }

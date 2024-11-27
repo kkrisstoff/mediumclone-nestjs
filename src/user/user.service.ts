@@ -25,10 +25,7 @@ export class UserService {
       where: { username: createUserDto.username },
     });
     if (userByEmail || userByUsername) {
-      throw new HttpException(
-        'Email or username are taken',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
+      throw new HttpException('Email or username are taken', HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     const newUser = new UserEntity();
@@ -36,19 +33,15 @@ export class UserService {
     return await this.userRepository.save(newUser);
   }
 
-  async updateUser(
-    userId: number,
-    updateUserDto: UpdateUserDto,
-
-  ): Promise<UserEntity> {
-    const user  = await this.findById(userId);
+  async updateUser(userId: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+    const user = await this.findById(userId);
     Object.assign(user, updateUserDto);
 
-    return await this.userRepository.save(user)
+    return await this.userRepository.save(user);
   }
 
   findById(id: number): Promise<UserEntity> {
-    return this.userRepository.findOne({where: { id } });
+    return this.userRepository.findOne({ where: { id } });
   }
 
   generateJWT(user: UserEntity): string {
@@ -65,23 +58,17 @@ export class UserService {
   async login(loginDto: LoginDto): Promise<UserEntity> {
     const user = await this.userRepository.findOne({
       where: { email: loginDto.email },
-      select: [ 'id', 'username', 'email', 'bio', 'image', 'password' ]
+      select: ['id', 'username', 'email', 'bio', 'image', 'password'],
     });
 
     if (!user) {
-      throw new HttpException(
-        'Credentials are not valid',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
+      throw new HttpException('Credentials are not valid', HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     const isPasswortCorrect = await compare(loginDto.password, user.password);
 
     if (!isPasswortCorrect) {
-      throw new HttpException(
-        'Credentials are not valid',
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
+      throw new HttpException('Credentials are not valid', HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     delete user.password;
