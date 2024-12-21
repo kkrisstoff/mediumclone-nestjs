@@ -7,8 +7,10 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 // const PORT = process.env.PORT
+// const devMode = process.env.DEV
+const devMode = true;
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: !!devMode });
   await app.listen(3010);
 }
 
